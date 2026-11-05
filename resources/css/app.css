@@ -1,0 +1,201 @@
+@import "tailwindcss";
+
+/* Self-hosted fonts (no third-party requests) */
+@import "@fontsource-variable/archivo";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/jetbrains-mono";
+@import "@fontsource/ibm-plex-sans-arabic/300.css";
+@import "@fontsource/ibm-plex-sans-arabic/400.css";
+@import "@fontsource/ibm-plex-sans-arabic/500.css";
+@import "@fontsource/ibm-plex-sans-arabic/600.css";
+@import "@fontsource/ibm-plex-sans-arabic/700.css";
+
+@source "../views";
+
+@theme {
+    --color-accent: #d46b38;
+    --color-accent-dark: #bf5c2c;
+    --color-ink: #151719;
+    --color-paper: #f5f4f0;
+    --color-line: #d9d7d0;
+    --color-stone: #ecebe6;
+    --color-muted: #686868;
+
+    --font-display: "Archivo Variable", ui-sans-serif, system-ui, sans-serif;
+    --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+    --font-mono: "JetBrains Mono Variable", ui-monospace, monospace;
+}
+
+/* Arabic: Inter everywhere. Inter has no Arabic glyphs, so Arabic letters fall through to
+   IBM Plex Sans Arabic while numbers and Latin text stay in Inter. Letter-spacing is dropped
+   because it breaks joined Arabic letters. */
+html[lang="ar"] {
+    --font-display: "Inter Variable", "IBM Plex Sans Arabic", ui-sans-serif, system-ui, sans-serif;
+    --font-sans: "Inter Variable", "IBM Plex Sans Arabic", ui-sans-serif, system-ui, sans-serif;
+    --font-mono: "Inter Variable", "IBM Plex Sans Arabic", ui-sans-serif, system-ui, sans-serif;
+}
+
+html[lang="ar"] * {
+    letter-spacing: 0 !important;
+}
+
+html[lang="ar"] .uppercase {
+    text-transform: none;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: #fff;
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+::selection {
+    background: var(--color-accent);
+    color: #fff;
+}
+
+:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+}
+
+@layer components {
+    .eyebrow-line {
+        @apply flex h-[18px] items-center gap-2 font-mono text-xs leading-[18px] tracking-[0.18em] text-accent uppercase;
+    }
+
+    .h2 {
+        @apply font-display text-[clamp(2.25rem,4.4vw,4rem)] leading-[0.98] tracking-[-0.02em];
+    }
+
+    .h3-lg {
+        @apply font-display text-[clamp(1.75rem,3vw,2.4rem)] leading-[0.98] tracking-[-0.02em];
+    }
+
+    .btn {
+        @apply inline-flex min-h-12 items-center justify-center gap-3 font-display font-medium transition-[background-color,color,border-color,transform] duration-300;
+    }
+
+    .btn-lg {
+        @apply px-8 py-4 text-[15px] leading-[22.5px] tracking-[-0.025em];
+    }
+
+    .btn-sm {
+        @apply px-6 py-3.5 text-sm leading-[21px] tracking-[-0.025em];
+    }
+
+    .btn-solid {
+        @apply bg-accent text-white hover:bg-accent-dark;
+    }
+
+    .btn-outline-light {
+        @apply border-[1.2px] border-white/30 text-white hover:border-white hover:bg-white hover:text-ink;
+    }
+
+    .btn-outline-dark {
+        @apply border-[1.2px] border-ink/25 text-ink hover:border-ink hover:bg-ink hover:text-white;
+    }
+
+    .label {
+        @apply font-mono text-[11px] leading-[16.5px] tracking-[0.1em] text-muted uppercase;
+    }
+
+    .field {
+        @apply w-full border-0 border-b-[1.2px] border-line bg-transparent py-3 font-display text-base text-ink transition-colors duration-200 outline-none placeholder:text-muted/50 hover:border-ink/40 focus:border-accent;
+    }
+}
+
+/* Arrow icons inside buttons: nudge on hover, mirror in RTL */
+.arrow {
+    transition: transform 0.3s, filter 0.3s;
+}
+
+[dir="rtl"] .arrow {
+    transform: scaleX(-1);
+}
+
+.btn:hover .arrow {
+    transform: translateX(4px);
+}
+
+[dir="rtl"] .btn:hover .arrow {
+    transform: translateX(-4px) scaleX(-1);
+}
+
+.btn-outline-dark:hover .arrow {
+    filter: brightness(0) invert(1);
+}
+
+/* Header bar states (toggled from app.js) */
+.hbar {
+    background: rgb(0 0 0 / 0.2);
+    color: #fff;
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.hbar.is-solid {
+    background: rgb(21 23 25 / 0.92);
+    color: #fff;
+}
+
+.hbar.is-light {
+    background: transparent;
+    color: var(--color-ink);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+}
+
+.hbar-link {
+    @apply p-2.5 font-display text-[13.5px] leading-[20.25px] tracking-[-0.025em] transition-colors hover:text-accent;
+}
+
+.hbar-link[aria-current="page"] {
+    @apply bg-accent font-bold text-white hover:text-white;
+}
+
+.menu-bar {
+    @apply h-px w-5 bg-current transition-transform duration-300;
+}
+
+[data-menu-toggle].is-open .menu-bar:first-child {
+    transform: translateY(3.5px) rotate(45deg);
+}
+
+[data-menu-toggle].is-open .menu-bar:last-child {
+    transform: translateY(-3.5px) rotate(-45deg);
+}
+
+/* Scroll reveal. Content stays visible without JS. */
+.js .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+        opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+        transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+    transition-delay: var(--d, 0ms);
+}
+
+.js .reveal.is-in {
+    opacity: 1;
+    transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    .js .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+}
