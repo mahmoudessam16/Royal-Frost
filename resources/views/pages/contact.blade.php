@@ -5,6 +5,12 @@
     $f = $c['form'];
 @endphp
 
+@push('head')
+    @if (config('site.map.key'))
+        @vite('resources/js/map.js')
+    @endif
+@endpush
+
 @section('content')
     <div class="bg-paper">
         {{-- Intro --}}
@@ -86,23 +92,43 @@
         </form>
 
         {{-- Map --}}
+        @php
+            $map = config('site.map');
+            $coords = $map['lat'].','.$map['lng'];
+            $address = $c['info'][3][1]; // the Address row
+        @endphp
         <x-container class="pb-24">
-            <div class="reveal relative h-[300px] overflow-hidden border-[1.2px] border-line bg-ink sm:h-[466px]">
-                <img src="{{ site_image('contact-map.webp') }}" alt="" loading="lazy" decoding="async" class="absolute inset-0 size-full object-cover opacity-40">
-                <div class="absolute inset-0 grid place-items-center">
-                    <div class="flex flex-col items-center">
-                        <span class="relative grid size-4 place-items-center">
-                            <span class="absolute -inset-1.5 animate-ping rounded-full bg-accent/30"></span>
-                            <span class="relative size-4 rounded-full bg-accent"></span>
-                        </span>
-                        <span class="pt-4 font-mono text-xs leading-[18px] tracking-[0.1em] whitespace-nowrap text-paper">{{ $c['map'] }}</span>
-                    </div>
+            <div class="reveal relative z-0 h-[340px] overflow-hidden border-[1.2px] border-line bg-stone sm:h-[466px]">
+                @if ($map['key'])
+                    {{-- Styled Google Map (Snazzy "Interface map"), built by resources/js/map.js --}}
+                    <div id="office-map" class="size-full" role="region" aria-label="{{ $c['map'] }}"
+                         data-key="{{ $map['key'] }}" data-lat="{{ $map['lat'] }}" data-lng="{{ $map['lng'] }}" data-zoom="{{ $map['zoom'] }}"
+                         data-title="{{ $t['meta']['name'] }}" data-address="{{ $address }}"></div>
+                @else
+                    {{-- No API key yet: plain Google Maps embed (cannot be restyled) --}}
+                    <iframe title="{{ $c['map'] }}" class="size-full border-0" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                            src="https://www.google.com/maps?q={{ $coords }}&z={{ $map['zoom'] }}&hl={{ $locale }}&output=embed"></iframe>
+                @endif
+
+                {{-- Place name and coordinates, floating over the map --}}
+                <div class="pointer-events-none absolute start-4 top-4 z-[500] bg-ink/90 px-4 py-3 text-paper backdrop-blur-sm">
+                    <p class="font-mono text-xs leading-[18px] tracking-[0.1em]">{{ $c['map'] }}</p>
+                    <p class="pt-0.5 font-mono text-[11px] leading-[16px] text-white/60" dir="ltr">{{ number_format($map['lat'], 4) }}° N, {{ number_format($map['lng'], 4) }}° E</p>
                 </div>
+
+                <noscript>
+                    <p class="absolute inset-0 grid place-items-center p-6 text-center text-muted">{{ $address }}</p>
+                </noscript>
             </div>
-            <p class="flex flex-wrap gap-x-4 gap-y-1 pt-6 text-sm leading-[21px] text-muted">
-                <span class="font-mono text-xs leading-[18px]">{{ $c['access_label'] }}</span>
-                <span>{{ $c['access'] }}</span>
-            </p>
+
+            <div class="flex flex-col gap-4 pt-6 sm:flex-row sm:items-center sm:justify-between">
+                <p class="flex flex-wrap gap-x-4 gap-y-1 text-sm leading-[21px] text-muted">
+                    <span class="font-mono text-xs leading-[18px]">{{ $c['access_label'] }}</span>
+                    <span>{{ $c['access'] }}</span>
+                </p>
+                <a href="https://www.google.com/maps/dir/?api=1&destination={{ $coords }}" target="_blank" rel="noopener"
+                   class="btn btn-sm btn-outline-dark self-start">{{ $c['directions'] }} <x-arrow tone="dark" /></a>
+            </div>
         </x-container>
     </div>
 @endsection

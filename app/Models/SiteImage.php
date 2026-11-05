@@ -64,9 +64,6 @@ class SiteImage extends Model
                 'agri-map' => ['Export map block', 'About 4:3'],
                 'cta-services' => ['Services closing call-to-action background', 'Wide photo (shown faded)'],
             ],
-            'Contact' => [
-                'contact-map' => ['Contact map', 'Wide, about 7:3'],
-            ],
         ];
     }
 

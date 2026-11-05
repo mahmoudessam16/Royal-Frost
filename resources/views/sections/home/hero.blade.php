@@ -9,7 +9,7 @@
         <div class="max-w-[835px]">
             <p class="inline-flex h-7 items-center bg-accent px-2 font-mono text-xs leading-[18px] tracking-[0.18em] text-white uppercase">{{ $h['eyebrow'] }}</p>
             <h1 class="reveal pt-8 font-display text-[clamp(3rem,5vw,8rem)] leading-[0.98] tracking-[-0.02em] text-paper">{{ $h['title'] }}<span class="text-white">{{ $h['accent'] }}</span></h1>
-            <p class="reveal max-w-[508px] pt-8 text-lg leading-[1.4625] text-white/70 md:text-xl" style="--d: 100ms">{{ $h['body'] }}</p>
+            <p class="reveal max-w-[508px] pt-8 text-lg leading-[1.4625] text-white md:text-xl" style="--d: 100ms">{{ $h['body'] }}</p>
             <div class="reveal flex flex-wrap gap-4 pt-10" style="--d: 200ms">
                 <a href="{{ route('contact') }}" class="btn btn-lg btn-solid">{{ $h['primary'] }} <x-arrow /></a>
                 <a href="{{ route('services') }}" class="btn btn-lg btn-outline-light">{{ $h['secondary'] }}</a>

@@ -288,6 +288,7 @@ return [
             'error' => 'Sorry, we could not send your message. Please try again or contact us by phone.',
         ],
         'map' => 'CAIRO, EGYPT',
+        'directions' => 'Get directions',
         'access_label' => 'Access:',
         'access' => 'Ground-floor reception · Visitor parking available · Directions on request',
     ],
